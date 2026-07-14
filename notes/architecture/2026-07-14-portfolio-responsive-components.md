@@ -11,7 +11,7 @@ status: draft
 
 ## Summary
 
-Implementation record for three home-page component systems exported from [Portfolio | AI Handoff](https://www.figma.com/design/VibdutrclLgS5EpFWgbJhH/Portfolio-%7C-AI-Handoff): the responsive header, contact strip (pseudo-footer), and case study redirection cards. Each Figma component set spans five breakpoints (360 / 768 / 1366 / 1600 / 1920) and is implemented as a single React component with Tailwind responsive utilities rather than per-breakpoint duplicates.
+Implementation record for responsive components exported from [Portfolio | AI Handoff](https://www.figma.com/design/VibdutrclLgS5EpFWgbJhH/Portfolio-%7C-AI-Handoff): the home-page header, contact strip (pseudo-footer), case study redirection cards, and site-wide footer. Hero components span five breakpoints (360 / 768 / 1366 / 1600 / 1920) and are implemented as single React components with Tailwind responsive utilities rather than per-breakpoint duplicates. The site footer uses a mobile/tablet vs desktop layout split at the `desktop` (1024px) breakpoint.
 
 ## Details
 
@@ -29,6 +29,7 @@ Implementation record for three home-page component systems exported from [Portf
 | `182:1626` | `header_default_states_responsive` | `SiteHeader.tsx` | `Hero.tsx` |
 | `182:1627` | `contact-strip-sticky` / pseudo-footer | `ContactStrip.tsx` | `Hero.tsx` |
 | `97:2198`–`97:2026` (+ image atoms) | `organism-case-study-card-*` | `CaseStudyCard.tsx` | `HeroCaseStudyCarousel.tsx` |
+| `197:3056` | `Footer` | `Footer.tsx` | `layout.tsx` (root) |
 
 ### 1. SiteHeader (`182:1626`)
 
@@ -116,6 +117,47 @@ Figma ships separate organism + image-atom component sets per breakpoint. Code c
 **Assets:** `portfolio/public/assets/case-studies/` — `{slug}-default.png`, `{slug}-hover.png` per project  
 **Re-download script:** `portfolio/scripts/download-case-study-assets.sh` (Figma MCP asset URLs expire ~7 days)
 
+### 4. Footer (`197:3056`)
+
+**Path:** `portfolio/src/components/layout/Footer.tsx`  
+**Wiring:** `portfolio/src/app/layout.tsx` — rendered after `{children}` on every page  
+**Data:** `footerCaseStudyLinks` and per-study `footerLabel` in `portfolio/src/lib/case-studies.ts`
+
+Site-wide footer distinct from the hero **ContactStrip** (sticky contact bar). Collapses Figma’s responsive component set into one component with a layout pivot at `desktop` (1024px).
+
+| Breakpoint | Layout |
+|------------|--------|
+| **360 / 768** (below `desktop`) | Single-column case study links (`flex flex-col gap-5`) |
+| **1024+** (`desktop:`) | Two-column link grid (`grid-cols-2`, `max-w-[572px]`, `gap-x-3 gap-y-3`) |
+
+**Structure:**
+
+- **CASE STUDIES pill** — rounded-full bordered label (`font-display`, uppercase, `border-zinc-950`)
+- **Four case study links** — underlined `font-body` links to `/case-studies/{slug}`; order from `footerCaseStudyLinks` (not carousel order):
+
+| Slug | Footer label |
+|------|--------------|
+| `smart-home` | Atomberg Smart Home |
+| `maternity` | Cloudnine Women's Wellness |
+| `erp` | Pine Labs ERP SaaS |
+| `insurance` | Care Insurance |
+
+- **Shivani K. wordmark** — `font-display-expanded`, 49px mobile → 116px desktop
+- **Copyright** — `©2026 Shivani Kher` (`font-body`, right-aligned on desktop)
+
+Each `CaseStudy` record also carries a `footerLabel` field (source of truth for display names); `footerCaseStudyLinks` defines footer-specific slug order and labels for the 2-column grid.
+
+**Tokens:** Reuses existing typography and zinc palette — no new entries in `tailwind.config.ts`. Uses `font-display`, `font-body`, `font-display-expanded`, and Tailwind `zinc-950` throughout (not `footer-bg` / `footer-text` — those remain ContactStrip-specific).
+
+#### Code Connect template
+
+**Path:** `portfolio/src/components/layout/Footer.figma.ts`  
+**Figma URL:** [Footer component set `197:3056`](https://www.figma.com/design/VibdutrclLgS5EpFWgbJhH/Portfolio-%7C-AI-Handoff?node-id=197-3056)
+
+Static template mapping the component set to `<Footer />`. Figma VARIANT `Property 1` (`Footer-360` … `Footer-1920`) is intentionally omitted — the code component has no props; responsiveness is handled via Tailwind `desktop:` utilities.
+
+**Blockers for publishing:** Code Connect MCP tools require a Figma Org/Enterprise Dev or Full seat; `figma.config.json` and `@figma/code-connect` are not yet in the portfolio project.
+
 ### Architecture diagram
 
 ```mermaid
@@ -124,23 +166,28 @@ flowchart TB
     H[header 182:1626]
     C[contact strip 182:1627]
     CS[case study cards ×15 nodes]
+    F[footer 197:3056]
   end
 
   subgraph code [portfolio/src]
     SH[SiteHeader.tsx]
     CT[ContactStrip.tsx]
     CC[CaseStudyCard.tsx]
+    FT[Footer.tsx]
     Hero[Hero.tsx]
     Carousel[HeroCaseStudyCarousel.tsx]
+    Layout[layout.tsx]
   end
 
   H --> SH
   C --> CT
   CS --> CC
+  F --> FT
   SH --> Hero
   CT --> Hero
   CC --> Carousel
   Carousel --> Hero
+  FT --> Layout
 ```
 
 ### Design token system
@@ -268,6 +315,17 @@ border-card-border   default stroke
 shadow-card-hover    hover elevation (laptop+)
 ```
 
+**Footer**
+
+```
+font-display              CASE STUDIES pill
+font-body                 case study links, copyright
+font-display-expanded     Shivani K. wordmark
+text-zinc-950             all footer text
+border-zinc-950           pill border
+desktop:                  2-col link grid + larger wordmark pivot
+```
+
 #### Figma → project token quick reference
 
 ```
@@ -291,6 +349,7 @@ shadow-card-hover    hover elevation (laptop+)
 - Case study detail pages (scaffold only)
 - Hero value-prop text animation polish
 - 1600-specific breakpoint (interpolated between `laptop` and `wide`)
+- Code Connect publish pipeline (`figma.config.json`, `@figma/code-connect`, Figma Org/Enterprise seat)
 
 ## Key takeaways
 
@@ -299,6 +358,7 @@ shadow-card-hover    hover elevation (laptop+)
 - Export and commit Figma MCP assets immediately; remote URLs expire in ~7 days.
 - Default/hover artwork swap via stacked `<Image>` layers with `group-hover:opacity-*` is simpler than breakpoint-specific image atoms.
 - Splash prototype timing (`splash-phase.ts`) governs when header and contact strip reveal — components accept `entranceActive` rather than owning animation state.
+- **Site footer vs hero contact strip:** `Footer.tsx` in root layout is the persistent page footer; `ContactStrip.tsx` is the sticky hero pseudo-footer — different Figma nodes, different token usage (`footer-*` tokens apply to ContactStrip only).
 
 ## Related
 
