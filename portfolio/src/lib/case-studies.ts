@@ -10,6 +10,8 @@ export type CaseStudyImages = {
 export type CaseStudy = {
   slug: CaseStudySlug;
   title: string;
+  /** Display name in site footer — Figma Footer (197:3056) */
+  footerLabel: string;
   tags: [string, string];
   images: CaseStudyImages;
   /** Paper design link — card component or detail page frame */
@@ -26,6 +28,7 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: 'insurance',
     title: 'Insurance',
+    footerLabel: 'Care Insurance',
     tags: ['RESPONSIVE', 'BFSI'],
     images: {
       default: `${ASSETS}/insurance-default.png`,
@@ -36,6 +39,7 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: 'maternity',
     title: 'Maternity',
+    footerLabel: "Cloudnine Women's Wellness",
     tags: ['MOBILE', 'WELLNESS'],
     images: {
       default: `${ASSETS}/maternity-default.png`,
@@ -47,6 +51,7 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: 'smart-home',
     title: 'Smart Home',
+    footerLabel: 'Atomberg Smart Home',
     tags: ['MOBILE', 'IOT'],
     images: {
       default: `${ASSETS}/smart-home-default.png`,
@@ -57,6 +62,7 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: 'erp',
     title: 'ERP',
+    footerLabel: 'Pine Labs ERP SaaS',
     tags: ['SAAS', 'ADMIN'],
     images: {
       default: `${ASSETS}/erp-default.png`,
@@ -64,6 +70,14 @@ export const caseStudies: CaseStudy[] = [
     },
     paperUrl: CASE_STUDY_CARD_PAPER_URL,
   },
+];
+
+/** Footer link order — Figma 2-column grid (197:3056) */
+export const footerCaseStudyLinks = [
+  { slug: 'smart-home' as const, label: 'Atomberg Smart Home' },
+  { slug: 'maternity' as const, label: "Cloudnine Women's Wellness" },
+  { slug: 'erp' as const, label: 'Pine Labs ERP SaaS' },
+  { slug: 'insurance' as const, label: 'Care Insurance' },
 ];
 
 export function getCaseStudy(slug: string): CaseStudy | undefined {
