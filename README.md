@@ -8,6 +8,16 @@ Personal knowledge base for architecture notes, tool evaluations, decisions, and
 - `notes/tools/` — library and service evaluations
 - `notes/decisions/` — ADRs and trade-off records
 - `notes/snippets/` — reusable code fragments
+- `portfolio/` — Next.js portfolio implementation (Figma handoff)
+
+## Git branches
+
+| Branch | Purpose |
+|--------|---------|
+| `main` | Stable vault + portfolio snapshots |
+| `dev` | Active portfolio and vault work |
+
+Work on `dev`; merge to `main` when a milestone is ready.
 
 ## Usage
 
