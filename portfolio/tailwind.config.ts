@@ -32,10 +32,12 @@ const config: Config = {
         card: {
           DEFAULT: '#f5f5f4',
           hover: '#fafafa',
+          border: 'rgba(135, 135, 135, 0.4)',
         },
         footer: {
           bg: '#f4f4f5',
           text: '#09090b',
+          muted: '#64748b',
         },
         nav: {
           bg: '#f4f4f5',
@@ -47,6 +49,9 @@ const config: Config = {
       },
       borderRadius: {
         DEFAULT: '3px',
+      },
+      boxShadow: {
+        'card-hover': '8px 11px 22px 0px rgba(0, 0, 0, 0.15)',
       },
     },
   },

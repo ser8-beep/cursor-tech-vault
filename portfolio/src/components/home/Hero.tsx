@@ -16,13 +16,13 @@ import {
 } from './HeroValuePropCycle';
 import { HeroCaseStudyCarousel } from './HeroCaseStudyCarousel';
 import {
-  ENTRANCE,
   EASE_PROTOTYPE,
   PROTOTYPE_PHASE_MS,
   type SplashPhase,
 } from '@/lib/splash-phase';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { SiteHeader } from '@/components/layout/SiteHeader';
+import { ContactStrip } from '@/components/layout/ContactStrip';
 
 function HeroSplash({
   sculptureBlurPx,
@@ -69,82 +69,6 @@ function HeroSplash({
         reducedMotion={reducedMotion}
       />
     </div>
-  );
-}
-
-function HeroContactStrip({
-  entranceActive,
-  reducedMotion,
-}: {
-  entranceActive: boolean;
-  reducedMotion: boolean;
-}) {
-  const motionEnabled = !reducedMotion;
-
-  return (
-    <motion.footer
-      initial={motionEnabled ? { opacity: 0, y: 16 } : false}
-      animate={
-        motionEnabled
-          ? entranceActive
-            ? { opacity: 1, y: 0 }
-            : { opacity: 0, y: 16 }
-          : undefined
-      }
-      transition={{
-        delay: ENTRANCE.contact.delay,
-        duration: ENTRANCE.contact.duration,
-        ease: EASE_PROTOTYPE.standard,
-      }}
-      className="flex w-full flex-col gap-2 pt-6 desktop:flex-row desktop:items-end desktop:justify-between desktop:pb-5 desktop:pt-10"
-      aria-hidden={!entranceActive}
-    >
-      <div className="flex w-full items-center desktop:order-2 desktop:w-auto">
-        <div className="flex items-center gap-0.5">
-          <img
-            src="/assets/hero/location-icon.png"
-            alt=""
-            width={32}
-            height={32}
-            className="h-6 w-6 desktop:h-8 desktop:w-8"
-          />
-          <div className="font-display text-[8px] uppercase tracking-[0.4px] text-zinc-950">
-            <p>LOC: MUMBAI, IN</p>
-            <p>UTC+5:30</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="hero-contact-bar flex h-10 w-full items-center overflow-hidden rounded-[3px] border border-zinc-400 bg-hero-footer p-2 desktop:order-1 desktop:h-auto desktop:w-[566px] desktop:p-3">
-        <div className="flex h-full w-full items-center justify-between gap-4">
-          <div className="flex items-center gap-4 desktop:gap-6">
-            <a
-              href="mailto:shivanimkher@gmail.com"
-              className="hero-contact-link font-display text-[11px] uppercase tracking-[0.55px] text-zinc-950 desktop:text-[8px] desktop:tracking-[0.4px]"
-            >
-              shivanimkher@gmail.com
-            </a>
-            <a
-              href="tel:+917977071976"
-              className="hero-contact-link font-display text-[11px] uppercase tracking-[0.55px] text-zinc-950 desktop:text-[8px] desktop:tracking-[0.4px]"
-            >
-              +91 7977071976
-            </a>
-            <a
-              href="https://linkedin.com/in/shivanikher"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hero-contact-link hidden font-display text-[8px] uppercase tracking-[0.4px] text-zinc-950 desktop:inline"
-            >
-              linkedin @shivani kher
-            </a>
-          </div>
-          <span className="hidden font-body text-[8px] uppercase text-hero-hover desktop:inline">
-            LET&apos;S CONNECT
-          </span>
-        </div>
-      </div>
-    </motion.footer>
   );
 }
 
@@ -204,7 +128,7 @@ export function Hero() {
         entranceActive={entranceActive}
         reducedMotion={reducedMotion}
       />
-      <HeroContactStrip
+      <ContactStrip
         entranceActive={entranceActive}
         reducedMotion={reducedMotion}
       />
