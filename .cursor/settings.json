@@ -1,0 +1,19 @@
+{
+  "plugins": {
+    "claude-plugins-official/claude-code-setup": {
+      "enabled": true
+    },
+    "notion-workspace": {
+      "enabled": true
+    },
+    "paper-desktop": {
+      "enabled": true
+    },
+    "claude-plugins-official/agent-sdk-dev": {
+      "enabled": true
+    },
+    "figma": {
+      "enabled": true
+    }
+  }
+}
